@@ -1,0 +1,6 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+www.hacksplaining.com	TRUE	/	FALSE	1999999999	_session_id	6f0a220f5e8104c2d86f778fddd11449
+www.hacksplaining.com	TRUE	/	FALSE	1999999999	_vulnerable-app_session	Nk02cnpCYlhXWjdZNWw1ZVRDdlR6WXRJRG40TzVIaEtrOEx3QmJXRDZKY1NNb0ZudWhsa3JWWjExcG0zU2dieEdRSGlTU3pxQ1hXNFpjZkVHZS9aSU5aRzVGWkgrQ0svRldJd2RRTnV2RnNEVUFrdDllYzlOeWZtU2d5bzlVVkhBUXErekYraFhtUG9QOW1uRmdJVTN3PT0tLW9CMXVpdkFPeEJFZ1VjQW5ONEtESmc9PQ%3D%3D--d7460eea2e7d23b1f81f776c1d33a566998cde1d
+www.hacksplaining.com	TRUE	/	FALSE	1999999999	SameSite	None
+

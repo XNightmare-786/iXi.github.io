@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from www.iXi.com/prevention/command-execution by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Aug 2022 09:49:43 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+
+  <title>Protecting Against Command Execution Attacks</title>
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://d1o5lmfp4gliop.cloudfront.net/assets/favicon-d2fd4b2666fd6a6c2eacee13d0d844a558942079e549b7f971085de9cab55511.ico" />
+
+  <link rel="apple-touch-icon"                 href="../touch-icon-iphone.png">
+  <link rel="apple-touch-icon" sizes="76x76"   href="../touch-icon-ipad.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="../touch-icon-iphone-retina.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="../touch-icon-ipad-retina.png">
+
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" media="all" href="../../d1o5lmfp4gliop.cloudfront.net/assets/application-bd10ee974bbc51bb3d86fa9ae10645db2b3eb4dc3d8cc7ce69082d3b5ef323f2.css" />
+  <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/application-70c4df94450edcfd2aaba387739ebbeae5cc4e79db9eec96837bd15cf2ea700e.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="L3Ekjjg1RQyybb2Xj4n/YF5rSxJpyR3JkcL4m2oITK+9pmpheu3zS/SphCHEK6eBOtodqCTRO9jHyuKpxuMy5A==" />
+
+  
+
+  <meta property="og:url"          content="https://www.iXi.com/prevention/command-execution" />
+<meta property="og:type"         content="website" />
+<meta property="og:title"        content="Protecting Against Command Execution Attacks" />
+<meta property="og:description"  content="Many web applications call operating system processes via the command line. If your application calls out to the OS, you need to be sure command strings are securely constructed. Let&#39;s see why. →" />
+<meta property="og:image"        content="https://www.iXi.comhttps://d1o5lmfp4gliop.cloudfront.net/images/exercises/command-execution/screenshot.png" />
+<meta property="og:site_name"    content="iXi"/>
+
+<meta property="fb:app_id"       content="495778420623064">
+
+<meta name="description"         content="Many web applications call operating system processes via the command line. If your application calls out to the OS, you need to be sure command strings are securely constructed. Let&#39;s see why. →" />
+
+<meta name="twitter:title"       content="Protecting Against Command Execution Attacks">
+<meta name="twitter:description" content="Many web applications call operating system processes via the command line. If your application calls out to the OS, you need to be sure command strings are securely constructed. Let&#39;s see why. → %>">
+
+<meta name="application-name"                content="iXi"/>
+<meta name="msapplication-TileColor"         content="#000000"/>
+<meta name="msapplication-square70x70logo"   content="windows-tiny.png"/>
+<meta name="msapplication-square150x150logo" content="windows-square.png"/>
+<meta name="msapplication-wide310x150logo"   content="windows-wide.png"/>
+<meta name="msapplication-square310x310logo" content="windows-large.png"/>
+
+
+  
+  <script>
+    let _rollbarConfig = {
+      accessToken: "7292cc33ae3843d4bc12aa01e4d82436",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      payload: {
+        environment: "production",
+        user: "unknown"
+      },
+      hostSafeList: ['iXi.com', 'www.iXi.com', 'app.iXi.com'],
+      ignoredMessages: ["jQuery is missing", "Can't find variable ga"]
+    };
+
+    !function(r){var e={};function o(n){if(e[n])return e[n].exports;var t=e[n]={i:n,l:!1,exports:{}};return r[n].call(t.exports,t,t.exports,o),t.l=!0,t.exports}o.m=r,o.c=e,o.d=function(r,e,n){o.o(r,e)||Object.defineProperty(r,e,{enumerable:!0,get:n})},o.r=function(r){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(r,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(r,"__esModule",{value:!0})},o.t=function(r,e){if(1&e&&(r=o(r)),8&e)return r;if(4&e&&"object"==typeof r&&r&&r.__esModule)return r;var n=Object.create(null);if(o.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:r}),2&e&&"string"!=typeof r)for(var t in r)o.d(n,t,function(e){return r[e]}.bind(null,t));return n},o.n=function(r){var e=r&&r.__esModule?function(){return r.default}:function(){return r};return o.d(e,"a",e),e},o.o=function(r,e){return Object.prototype.hasOwnProperty.call(r,e)},o.p="",o(o.s=0)}([function(r,e,o){var n=o(1),t=o(4);_rollbarConfig=_rollbarConfig||{},_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||"https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/2.13.0/rollbar.min.js",_rollbarConfig.async=void 0===_rollbarConfig.async||_rollbarConfig.async;var a=n.setupShim(window,_rollbarConfig),l=t(_rollbarConfig);window.rollbar=n.Rollbar,a.loadFull(window,document,!_rollbarConfig.async,_rollbarConfig,l)},function(r,e,o){var n=o(2);function t(r){return function(){try{return r.apply(this,arguments)}catch(r){try{console.error("[Rollbar]: Internal error",r)}catch(r){}}}}var a=0;function l(r,e){this.options=r,this._rollbarOldOnError=null;var o=a++;this.shimId=function(){return o},"undefined"!=typeof window&&window._rollbarShims&&(window._rollbarShims[o]={handler:e,messages:[]})}var i=o(3),s=function(r,e){return new l(r,e)},d=function(r){return new i(s,r)};function c(r){return t(function(){var e=Array.prototype.slice.call(arguments,0),o={shim:this,method:r,args:e,ts:new Date};window._rollbarShims[this.shimId()].messages.push(o)})}l.prototype.loadFull=function(r,e,o,n,a){var l=!1,i=e.createElement("script"),s=e.getElementsByTagName("script")[0],d=s.parentNode;i.crossOrigin="",i.src=n.rollbarJsUrl,o||(i.async=!0),i.onload=i.onreadystatechange=t(function(){if(!(l||this.readyState&&"loaded"!==this.readyState&&"complete"!==this.readyState)){i.onload=i.onreadystatechange=null;try{d.removeChild(i)}catch(r){}l=!0,function(){var e;if(void 0===r._rollbarDidLoad){e=new Error("rollbar.js did not load");for(var o,n,t,l,i=0;o=r._rollbarShims[i++];)for(o=o.messages||[];n=o.shift();)for(t=n.args||[],i=0;i<t.length;++i)if("function"==typeof(l=t[i])){l(e);break}}"function"==typeof a&&a(e)}()}}),d.insertBefore(i,s)},l.prototype.wrap=function(r,e,o){try{var n;if(n="function"==typeof e?e:function(){return e||{}},"function"!=typeof r)return r;if(r._isWrap)return r;if(!r._rollbar_wrapped&&(r._rollbar_wrapped=function(){o&&"function"==typeof o&&o.apply(this,arguments);try{return r.apply(this,arguments)}catch(o){var e=o;throw e&&("string"==typeof e&&(e=new String(e)),e._rollbarContext=n()||{},e._rollbarContext._wrappedSource=r.toString(),window._rollbarWrappedError=e),e}},r._rollbar_wrapped._isWrap=!0,r.hasOwnProperty))for(var t in r)r.hasOwnProperty(t)&&(r._rollbar_wrapped[t]=r[t]);return r._rollbar_wrapped}catch(e){return r}};for(var p="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleAnonymousErrors,handleUnhandledRejection,captureEvent,captureDomContentLoaded,captureLoad".split(","),u=0;u<p.length;++u)l.prototype[p[u]]=c(p[u]);r.exports={setupShim:function(r,e){if(r){var o=e.globalAlias||"Rollbar";if("object"==typeof r[o])return r[o];r._rollbarShims={},r._rollbarWrappedError=null;var a=new d(e);return t(function(){e.captureUncaught&&(a._rollbarOldOnError=r.onerror,n.captureUncaughtExceptions(r,a,!0),e.wrapGlobalEventHandlers&&n.wrapGlobals(r,a,!0)),e.captureUnhandledRejections&&n.captureUnhandledRejections(r,a,!0);var t=e.autoInstrument;return!1!==e.enabled&&(void 0===t||!0===t||"object"==typeof t&&t.network)&&r.addEventListener&&(r.addEventListener("load",a.captureLoad.bind(a)),r.addEventListener("DOMContentLoaded",a.captureDomContentLoaded.bind(a))),r[o]=a,a})()}},Rollbar:d}},function(r,e){function o(r,e,o){if(e.hasOwnProperty&&e.hasOwnProperty("addEventListener")){for(var n=e.addEventListener;n._rollbarOldAdd&&n.belongsToShim;)n=n._rollbarOldAdd;var t=function(e,o,t){n.call(this,e,r.wrap(o),t)};t._rollbarOldAdd=n,t.belongsToShim=o,e.addEventListener=t;for(var a=e.removeEventListener;a._rollbarOldRemove&&a.belongsToShim;)a=a._rollbarOldRemove;var l=function(r,e,o){a.call(this,r,e&&e._rollbar_wrapped||e,o)};l._rollbarOldRemove=a,l.belongsToShim=o,e.removeEventListener=l}}r.exports={captureUncaughtExceptions:function(r,e,o){if(r){var n;if("function"==typeof e._rollbarOldOnError)n=e._rollbarOldOnError;else if(r.onerror){for(n=r.onerror;n._rollbarOldOnError;)n=n._rollbarOldOnError;e._rollbarOldOnError=n}e.handleAnonymousErrors();var t=function(){var o=Array.prototype.slice.call(arguments,0);!function(r,e,o,n){r._rollbarWrappedError&&(n[4]||(n[4]=r._rollbarWrappedError),n[5]||(n[5]=r._rollbarWrappedError._rollbarContext),r._rollbarWrappedError=null);var t=e.handleUncaughtException.apply(e,n);o&&o.apply(r,n),"anonymous"===t&&(e.anonymousErrorsPending+=1)}(r,e,n,o)};o&&(t._rollbarOldOnError=n),r.onerror=t}},captureUnhandledRejections:function(r,e,o){if(r){"function"==typeof r._rollbarURH&&r._rollbarURH.belongsToShim&&r.removeEventListener("unhandledrejection",r._rollbarURH);var n=function(r){var o,n,t;try{o=r.reason}catch(r){o=void 0}try{n=r.promise}catch(r){n="[unhandledrejection] error getting `promise` from event"}try{t=r.detail,!o&&t&&(o=t.reason,n=t.promise)}catch(r){}o||(o="[unhandledrejection] error getting `reason` from event"),e&&e.handleUnhandledRejection&&e.handleUnhandledRejection(o,n)};n.belongsToShim=o,r._rollbarURH=n,r.addEventListener("unhandledrejection",n)}},wrapGlobals:function(r,e,n){if(r){var t,a,l="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(t=0;t<l.length;++t)r[a=l[t]]&&r[a].prototype&&o(e,r[a].prototype,n)}}}},function(r,e){function o(r,e){this.impl=r(e,this),this.options=e,function(r){for(var e=function(r){return function(){var e=Array.prototype.slice.call(arguments,0);if(this.impl[r])return this.impl[r].apply(this.impl,e)}},o="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleAnonymousErrors,handleUnhandledRejection,_createItem,wrap,loadFull,shimId,captureEvent,captureDomContentLoaded,captureLoad".split(","),n=0;n<o.length;n++)r[o[n]]=e(o[n])}(o.prototype)}o.prototype._swapAndProcessMessages=function(r,e){var o,n,t;for(this.impl=r(this.options);o=e.shift();)n=o.method,t=o.args,this[n]&&"function"==typeof this[n]&&("captureDomContentLoaded"===n||"captureLoad"===n?this[n].apply(this,[t[0],o.ts]):this[n].apply(this,t));return this},r.exports=o},function(r,e){r.exports=function(r){return function(e){if(!e&&!window._rollbarInitialized){for(var o,n,t=(r=r||{}).globalAlias||"Rollbar",a=window.rollbar,l=function(r){return new a(r)},i=0;o=window._rollbarShims[i++];)n||(n=o.handler),o.handler._swapAndProcessMessages(l,o.messages);window[t]=n,window._rollbarInitialized=!0}}}}]);
+
+  </script>
+
+
+
+
+
+</head>
+<body class="light-background logged-out prevention  unknown_device unknown_browser unknown_browser0 windows non-ie">
+
+  <div class="content">
+
+
+      <div class="header">
+  <nav class="navbar navbar-expand-lg ">
+
+    <div class="container-fluid">
+      <button class="navbar-toggler navbar-toggler-right"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapsing-menu">
+        <i class="fa fa-bars"></i>
+      </button>
+
+
+      <span class="navbar-brand logo">
+        <a href="../index.html">
+          <div class="title">iXi</div>
+        </a>
+      </span>
+
+      <div class="navbar-collapse collapse justify-content-end" id="collapsing-menu">
+
+        <div class="navbar-nav mr-auto">
+
+        </div>
+
+        <ul class="navbar-nav justify-content-end">
+
+
+            <li class="nav-item nav-features"><a class="nav-link" href="../features.html">Features</a></li>
+            <li class="nav-item nav-lessons"><a class="nav-link" href="../lessons.html">Lessons</a></li>
+            <li class="nav-item nav-enterprise"><a class="nav-link" href="../enterprise.html">Enterprise</a></li>
+            <li class="nav-item nav-owasp top 10"><a class="nav-link" href="../owasp.html">OWASP Top 10</a></li>
+            <li class="nav-item nav-pci compliance"><a class="nav-link" href="../pci.html">PCI Compliance</a></li>
+            <li class="nav-item nav-the book"><a class="nav-link" href="../book.html">The Book</a></li>
+            <li class="nav-item nav-login"><a class="nav-link" href="../login.html">Login</a></li>
+            <li class="nav-item nav-signup"><a class="nav-link" href="../join.html">SignUp</a></li>
+
+
+        </ul>
+      </div>
+    </div>
+
+  </nav>
+</div>
+
+
+      
+<script>
+  hljs.configure({ classPrefix: 'code-' });
+  hljs.highlightAll();
+</script>
+
+<div class="main reading command-execution">
+
+  <div class="container">
+    <div class="row prevention-tips has-sponsor">
+      <div class="row title modest">
+        Protecting Against Command Execution Attacks
+      </div>
+
+      
+<p><strong>If an attacker can execute arbitrary code on your servers, your systems
+are almost certainly going to be compromised.</strong> You need to take great
+care when designing how your web server interacts with the underlying operating
+system.</p>
+
+
+
+      <h3 id="risks">Risks</h3>
+
+      <div class="ratings">
+  <div class="rating prevalence common">
+    <div class="category">
+      <span class="category-label">
+        Prevalence
+      </span>
+
+      <span class="description">
+        Common
+      </span>
+    </div>
+
+    <div class="level">
+      <div class="rating-icons prevalence common">
+        <img class="on one" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-prevelance-on-08c87a35753a8cffcf36b11e7964cfaf357ed53beea25705689f8b289b9260db.png" />
+        <img class="on two" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-prevelance-on-08c87a35753a8cffcf36b11e7964cfaf357ed53beea25705689f8b289b9260db.png" />
+        <img class="on three" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-prevelance-on-08c87a35753a8cffcf36b11e7964cfaf357ed53beea25705689f8b289b9260db.png" />
+      </div>
+   </div>
+  </div>
+
+  <div class="rating exploitability moderate">
+    <div class="category">
+      <span class="category-label">
+        Exploitability
+      </span>
+
+      <span class="description">
+        Moderate
+      </span>
+    </div>
+
+    <div class="level">
+      <div class="rating-icons exploitability moderate"">
+        <img class="on one" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-exploitability-on-72a414cbfd6607547d507635de7609d1ba1bbfc36e454851949c4efc6fdd6f82.png" />
+        <img class="on two" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-exploitability-on-72a414cbfd6607547d507635de7609d1ba1bbfc36e454851949c4efc6fdd6f82.png" />
+        <img class="on three" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-exploitability-on-72a414cbfd6607547d507635de7609d1ba1bbfc36e454851949c4efc6fdd6f82.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="rating impact devastating">
+    <div class="category">
+      <span class="category-label">
+        Impact
+      </span>
+
+      <span class="description">
+        Devastating
+      </span>
+    </div>
+
+    <div class="level">
+      <div class="rating-icons impact devastating">
+        <img class="on one" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-impact-on-56af21599bf07cebbffbecceec1537a9471628fb1d3374433c1d9b8b1ab703bf.png" />
+        <img class="on two" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-impact-on-56af21599bf07cebbffbecceec1537a9471628fb1d3374433c1d9b8b1ab703bf.png" />
+        <img class="on three" src="../../d1o5lmfp4gliop.cloudfront.net/assets/icons/rating-impact-on-56af21599bf07cebbffbecceec1537a9471628fb1d3374433c1d9b8b1ab703bf.png" />
+      </div>
+    </div>
+  </div>
+</div>
+
+      <p><strong>Remote code execution</strong> is a major security lapse, and
+the last step along the road to complete system takeover. After gaining access,
+an attacker will attempt to escalate their privileges on the server,
+install malicious scripts, or make your server part of a <a href="../glossary/botnets.html">botnet</a> to be
+used at a later date.</p>
+
+<p class="well"><strong>Command injection vulnerabilities often occur in older, legacy code,
+such as CGI scripts.</strong></p>
+
+
+
+
+      <h3 id="protection">Protection</h3>
+
+<p>If your application calls out to the operating system, you need to be sure command 
+strings are securely constructed, or else you risk having malicious instructions injected
+by an attacker. This section outlines a few approaches to protecting yourself.</p>
+
+<h6 id="try-to-avoid-command-line-calls-altogether">Try to Avoid Command Line Calls Altogether</h6>
+
+<p>Modern programming languages have interfaces that permit you to read files,
+send emails, and perform other operation system functions. <strong>Use
+APIs wherever possible –</strong> only use shell commands where
+absolutely necessary. This will reduce the number of attack vectors
+in your application, and will also simplify your codebase.</p>
+
+<h6 id="escape-inputs-correctly">Escape Inputs Correctly</h6>
+
+<p><strong>Injection vulnerabilities occur when untrusted input is not
+sanitized correctly.</strong> If you use shell commands, be sure to
+scrub input values for potentially malicious characters:</p>
+
+<table class="data-table">
+  <tr> <td> ;    </td> </tr>
+  <tr> <td> &amp;    </td> </tr>
+  <tr> <td> |    </td> </tr>
+  <tr> <td> `    </td> </tr>
+</table>
+
+<p>Even better, restrict input by testing it against a regular expression
+of known safe characters. (For example, alphanumeric characters.)</p>
+
+<h6 id="restrict-the-permitted-commands">Restrict the Permitted Commands</h6>
+
+<p>Try to construct all or most of your shell commands using string literals,
+rather than user input. Where user input is required, try to whitelist
+permitted values, or enumerate them in a conditional statement.</p>
+
+<h6 id="perform-thorough-code-reviews">Perform Thorough Code Reviews</h6>
+
+<p>Check system calls for vulnerabilities as a part of your
+code review process. Vulnerabilities often creep in over time – make
+sure your team knows what to look for.</p>
+
+<h6 id="run-with-restricted-permissions">Run with Restricted Permissions</h6>
+
+<p>It is a good practice to run your server processes with only the
+permissions that they require to function – the <a href="../glossary/principle-of-least-privilege.html">principle of least privilege</a>.
+This can help limit the impact of command
+injection vulnerabilities as a second line of defense.</p>
+
+<p>Make sure each web server process can only access the directories that it needs,
+and narrow down the directories in which they write or execute files.
+Consider running the process in a <strong>chroot jail</strong> if you are running on Unix. This will 
+limit the ability of maliciously injected code to “climb out” of a 
+directory.</p>
+
+<h3 id="code-samples">Code Samples</h3>
+
+<p>The code samples below illustrate how to safely make command-line calls in
+various languages.</p>
+
+<a class="toggle collapsed" data-bs-toggle="collapse" href="#pythond7385ed4-3edc-4219-bb6e-374183c8c56f-examples" aria-expanded="false" aria-controls="pythond7385ed4-3edc-4219-bb6e-374183c8c56f-examples"><h5 id="python">Python</h5></a><span id="pythond7385ed4-3edc-4219-bb6e-374183c8c56f-examples" class="collapse">
+
+<p>New processes are spawned in python using the modules
+<a href="https://docs.python.org/2/library/popen2.html"><code>popen2</code></a>,
+<a href="https://docs.python.org/2/library/os.html"><code>os</code></a>,
+<a href="https://docs.python.org/2/library/commands.html"><code>commands</code></a>, and
+<a href="https://docs.python.org/2/library/subprocess.html"><code>subprocess</code></a>.
+<code>subprocess</code> is the preferred API (the others are deprecated and replaced by 
+it). The <code>subprocess</code> module has built-in protection against command execution:</p>
+
+<pre class="good"><code class="language-python">from subprocess import call
+
+# An invocation of the call(...) function will ensure only a single
+# command is run.
+call(["ls", "-l"])
+</code></pre>
+
+<p>This protection <em>can</em> be disabled – be on the lookout for anything that opens 
+a process in the following manner:</p>
+
+<pre class="bad"><code class="language-python">from subprocess import call
+
+# shell=True disables command injection checking.
+call("cat " + filename, shell=True)
+</code></pre>
+
+</span><a class="toggle collapsed" data-bs-toggle="collapse" href="#rubyf3ca278d-42b8-4d92-a34e-15df6fce5d5f-examples" aria-expanded="false" aria-controls="rubyf3ca278d-42b8-4d92-a34e-15df6fce5d5f-examples"><h5 id="ruby">Ruby</h5></a><span id="rubyf3ca278d-42b8-4d92-a34e-15df6fce5d5f-examples" class="collapse">
+
+<p>Ruby offers a multitude of ways to make command line calls:</p>
+
+<pre class="warning"><code class="language-ruby">eval "ls -l"
+
+system "ls -l"
+
+`ls -l` # Backticks indicate an OS command to be executed.
+
+Kernel.exec("ls -l")
+
+%x( ls -l )
+
+open("|date") do |cmd|
+   print cmd.gets
+end
+</code></pre>
+
+<p>If you must use command line calls in your application, be sure to
+sanitize inputs using the <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/shellwords/rdoc/Shellwords.html#method-c-escape"><code>Shellwords</code></a>
+module:</p>
+
+<pre class="good"><code class="language-ruby">open("| grep #{Shellwords.escape(pattern)} file") { |pipe|
+  # ...
+}
+</code></pre>
+
+</span><a class="toggle collapsed" data-bs-toggle="collapse" href="#java1eca93e0-0d8f-49f9-80d6-db60984ed102-examples" aria-expanded="false" aria-controls="java1eca93e0-0d8f-49f9-80d6-db60984ed102-examples"><h5 id="java">Java</h5></a><span id="java1eca93e0-0d8f-49f9-80d6-db60984ed102-examples" class="collapse">
+
+<p>Since Java is run in a virtual machine, command-line calls are generally
+discouraged. They can be executed using the <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html"><code>java.lang.Runtime</code></a>
+API, however:</p>
+
+<pre class="good"><code class="language-java">
+Runtime.getRuntime().exec("ls -l");
+
+</code></pre>
+
+<p>The call to <code>exec(...)</code> will tokenize the input and make sure only a single 
+command is run. Just be sure not to write your own tokenizer!</p>
+
+</span><a class="toggle collapsed" data-bs-toggle="collapse" href="#net0fb88731-fbcf-490f-a2df-bef3dbf0f7d9-examples" aria-expanded="false" aria-controls="net0fb88731-fbcf-490f-a2df-bef3dbf0f7d9-examples"><h5 id="net">.NET</h5></a><span id="net0fb88731-fbcf-490f-a2df-bef3dbf0f7d9-examples" class="collapse">
+
+<p>There are a couple of ways to access the command line in C#, though
+.NET has a very comprehensive set of standard libraries, so you will
+rarely need to:</p>
+
+<pre><code class="language-cs">System.Diagnostics.Process.Start("CMD.exe", "ls -l");
+
+var process = new ProcessStartInfo();
+process.UseShellExecute = true;
+process.WorkingDirectory = @"C:\Windows\System32";
+process.FileName = @"C:\Windows\System32\cmd.exe";
+process.Verb = "runas";
+process.Arguments = "/c ls -l";
+Process.Start(process);
+</code></pre>
+
+</span><a class="toggle collapsed" data-bs-toggle="collapse" href="#node6524bd66-68c9-4632-8f25-301fbd4b4b3c-examples" aria-expanded="false" aria-controls="node6524bd66-68c9-4632-8f25-301fbd4b4b3c-examples"><h5 id="node">Node</h5></a><span id="node6524bd66-68c9-4632-8f25-301fbd4b4b3c-examples" class="collapse">
+
+<p>The usual way of invoking shell commands in Node is using the
+<a href="https://nodejs.org/api/child_process.html"><code>child_process</code></a>
+module. This is a wrapper around <strong>bin.sh</strong>, so concatenating
+command strings is risky:</p>
+
+<pre class="bad"><code class="language-javascript">var child_process = require('child_process');
+
+child_process.exec('ls -l ' + input_path, function (err, data) {
+  console.log(data);
+});
+</code></pre>
+
+<p>Instead, use one of the functions that take arrays as arguments:</p>
+
+<pre class="good"><code class="language-javascript">child_process.execFile('/bin/ls', ['-l', input_path], function (err, result) {
+  console.log(result)
+});
+</code></pre>
+
+<pre class="good"><code class="language-javascript">var ls = child_process.spawn('/bin/ls', ['-l', input_path])
+</code></pre>
+
+</span><a class="toggle collapsed" data-bs-toggle="collapse" href="#php249e6f63-ee0c-4c2f-b458-2c335e503127-examples" aria-expanded="false" aria-controls="php249e6f63-ee0c-4c2f-b458-2c335e503127-examples"><h5 id="php">PHP</h5></a><span id="php249e6f63-ee0c-4c2f-b458-2c335e503127-examples" class="collapse">
+
+<p>Making command-line calls in PHP is fairly common, and there are a number
+of ways to make them:</p>
+
+<pre class="warning"><code class="language-php">
+shell_exec "ls -l"
+
+exec "ls -l"
+
+passthru "ls -l"
+
+system "ls -l"
+
+`ls -l`
+    
+</code></pre>
+
+<p>Be careful to sanitize the inputs to any of these functions.</p>
+
+</span><h3 id="further-reading">Further Reading</h3>
+
+<ul>
+  <li><a href="https://docs.python.org/2/library/subprocess.html#frequently-used-arguments">A note about shell commands in Python.</a></li>
+  <li><a href="http://tech.natemurray.com/2007/03/ruby-shell-commands.html">A guide to shell commands in Ruby.</a></li>
+  <li><a href="http://gavinmiller.io/2015/fixing-command-injection-vulnerabilities/">Command injection in Ruby.</a></li>
+  <li><a href="https://ckarande.gitbooks.io/owasp-nodegoat-tutorial/content/tutorial/a1_-_server_side_js_injection.html">Command injection in Node.</a></li>
+</ul>
+
+
+
+
+        <h3 id="related">Related Vulnerabilities</h3>
+
+        <div class="related-vulnerabilities">
+            <a href="../login0f92.html"><div id="directory_traversal"
+     class="exercise-link active">
+
+  <div class="exercise-label">
+    Directory Traversal
+  </div>
+
+  <div class="spacer">
+
+
+      <div class="img animated-icon animation-trigger"
+           data-color="white"
+           data-icon="https://d1o5lmfp4gliop.cloudfront.net/images/exercises/directory-traversal/icon.gif"
+           data-animating="false"
+           data-animated-icon="https://d1o5lmfp4gliop.cloudfront.net/images/exercises/directory-traversal/icon-animated.gif"
+           data-animated-icon-next="https://d1o5lmfp4gliop.cloudfront.net/images/exercises/directory-traversal/icon-animated.gif"
+           data-loop="false"></div>
+
+      <script>
+        $('<img />', { src: 'https://d1o5lmfp4gliop.cloudfront.net/images/exercises/directory-traversal/icon-animated.gif' });
+      </script>
+
+
+  </div>
+
+</div>
+</a>
+            <a href="../exercises/file-upload.html"><div id="file_upload"
+     class="exercise-link active">
+
+  <div class="exercise-label">
+    File Upload Vulnerabilities
+  </div>
+
+  <div class="spacer">
+
+
+      <div class="img animated-icon animation-trigger"
+           data-color="white"
+           data-icon="https://d1o5lmfp4gliop.cloudfront.net/images/exercises/file-upload/icon.gif"
+           data-animating="false"
+           data-animated-icon="https://d1o5lmfp4gliop.cloudfront.net/images/exercises/file-upload/icon-animated.gif"
+           data-animated-icon-next="https://d1o5lmfp4gliop.cloudfront.net/images/exercises/file-upload/icon-animated.gif"
+           data-loop="false"></div>
+
+      <script>
+        $('<img />', { src: 'https://d1o5lmfp4gliop.cloudfront.net/images/exercises/file-upload/icon-animated.gif' });
+      </script>
+
+
+  </div>
+
+</div>
+</a>
+        </div>
+
+    </div>
+
+      
+
+
+
+  </div>
+
+
+    <div class="container">
+      <div class="row quiz-link">
+        <a href="../join0d6b.html?next=%2Fquiz%2Fcommand-execution">
+          <div class="link-question">
+            Got all that?
+          </div>
+
+          <div class="link-link">
+            Test Yourself →
+          </div>
+
+          <div class="link-caption">
+            <div>Take our quiz to make sure everything is clear</div>
+          </div>
+</a>      </div>
+    </div>
+
+
+
+</div>
+
+      
+  <footer class="regular">
+  <div class="container">
+    <ul>
+      <li>
+        <a href="../lessons.html">Lessons</a>
+      </li>
+      <li>
+        <a href="../glossary.html">Glossary</a>
+      </li>
+      <li>
+        <a href="../privacy.html">Privacy</a>
+      </li>
+      <li>
+        <a href="../legal.html">Legal</a>
+      </li>
+
+      <li class="pull-right copyright">
+          <a class="contact-us"
+             title="Get in touch"
+             href="mailto:question@iXi.com"
+             rel="noopener noreferrer">
+            <span class="fa-stack">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+
+        <a href="../index.html">
+          <span style="font-family: 'Oxygen'">©</span> 2022 iXi
+</a>      </li>
+    </ul>
+  </div>
+</footer>
+
+
+
+  </div>
+
+    <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/cookieinfo-1af9cc137c2c2bc8ea4d469f45d357ec43dc6c23537bd0c96aa9b51ff416ce5e.js" id="cookieinfo"></script>
+
+</body>
+
+<script>
+  $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip({ container: 'body' });
+  });
+</script>
+
+
+<!-- Mirrored from www.iXi.com/prevention/command-execution by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Aug 2022 09:49:44 GMT -->
+</html>

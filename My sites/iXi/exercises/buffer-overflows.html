@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from www.iXi.com/exercises/buffer-overflows by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Aug 2022 09:49:11 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+
+  <title>Buffer Overflows</title>
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://d1o5lmfp4gliop.cloudfront.net/assets/favicon-d2fd4b2666fd6a6c2eacee13d0d844a558942079e549b7f971085de9cab55511.ico" />
+
+  <link rel="apple-touch-icon"                 href="../touch-icon-iphone.png">
+  <link rel="apple-touch-icon" sizes="76x76"   href="../touch-icon-ipad.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="../touch-icon-iphone-retina.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="../touch-icon-ipad-retina.png">
+
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" media="all" href="../../d1o5lmfp4gliop.cloudfront.net/assets/application-bd10ee974bbc51bb3d86fa9ae10645db2b3eb4dc3d8cc7ce69082d3b5ef323f2.css" />
+  <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/application-70c4df94450edcfd2aaba387739ebbeae5cc4e79db9eec96837bd15cf2ea700e.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="wTTXcvfEWB/6sEzM/moWcjBH6J71RLFLX7MMviVMSlJT45mdtRzuWLx0dXq1yE6TVPa+JLhcl1oJuxaMiac0GQ==" />
+
+  
+
+  <meta property="og:url"          content="https://www.iXi.com/exercises/buffer-overflows" />
+<meta property="og:type"         content="website" />
+<meta property="og:title"        content="Buffer Overflows" />
+<meta property="og:description"  content="An attacker can use buffer overflows to take your site offline or to inject malicious code Let&#39;s learn how they work. →" />
+<meta property="og:image"        content="https://www.iXi.comhttps://d1o5lmfp4gliop.cloudfront.net/images/exercises/buffer-overflows/screenshot.png" />
+<meta property="og:site_name"    content="iXi"/>
+
+<meta property="fb:app_id"       content="495778420623064">
+
+<meta name="description"         content="An attacker can use buffer overflows to take your site offline or to inject malicious code Let&#39;s learn how they work. →" />
+
+<meta name="twitter:title"       content="Buffer Overflows">
+<meta name="twitter:description" content="An attacker can use buffer overflows to take your site offline or to inject malicious code Let&#39;s learn how they work. → %>">
+
+<meta name="application-name"                content="iXi"/>
+<meta name="msapplication-TileColor"         content="#000000"/>
+<meta name="msapplication-square70x70logo"   content="windows-tiny.png"/>
+<meta name="msapplication-square150x150logo" content="windows-square.png"/>
+<meta name="msapplication-wide310x150logo"   content="windows-wide.png"/>
+<meta name="msapplication-square310x310logo" content="windows-large.png"/>
+
+
+  
+  <script>
+    let _rollbarConfig = {
+      accessToken: "7292cc33ae3843d4bc12aa01e4d82436",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      payload: {
+        environment: "production",
+        user: "unknown"
+      },
+      hostSafeList: ['iXi.com', 'www.iXi.com', 'app.iXi.com'],
+      ignoredMessages: ["jQuery is missing", "Can't find variable ga"]
+    };
+
+    !function(r){var e={};function o(n){if(e[n])return e[n].exports;var t=e[n]={i:n,l:!1,exports:{}};return r[n].call(t.exports,t,t.exports,o),t.l=!0,t.exports}o.m=r,o.c=e,o.d=function(r,e,n){o.o(r,e)||Object.defineProperty(r,e,{enumerable:!0,get:n})},o.r=function(r){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(r,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(r,"__esModule",{value:!0})},o.t=function(r,e){if(1&e&&(r=o(r)),8&e)return r;if(4&e&&"object"==typeof r&&r&&r.__esModule)return r;var n=Object.create(null);if(o.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:r}),2&e&&"string"!=typeof r)for(var t in r)o.d(n,t,function(e){return r[e]}.bind(null,t));return n},o.n=function(r){var e=r&&r.__esModule?function(){return r.default}:function(){return r};return o.d(e,"a",e),e},o.o=function(r,e){return Object.prototype.hasOwnProperty.call(r,e)},o.p="",o(o.s=0)}([function(r,e,o){var n=o(1),t=o(4);_rollbarConfig=_rollbarConfig||{},_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||"https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/2.13.0/rollbar.min.js",_rollbarConfig.async=void 0===_rollbarConfig.async||_rollbarConfig.async;var a=n.setupShim(window,_rollbarConfig),l=t(_rollbarConfig);window.rollbar=n.Rollbar,a.loadFull(window,document,!_rollbarConfig.async,_rollbarConfig,l)},function(r,e,o){var n=o(2);function t(r){return function(){try{return r.apply(this,arguments)}catch(r){try{console.error("[Rollbar]: Internal error",r)}catch(r){}}}}var a=0;function l(r,e){this.options=r,this._rollbarOldOnError=null;var o=a++;this.shimId=function(){return o},"undefined"!=typeof window&&window._rollbarShims&&(window._rollbarShims[o]={handler:e,messages:[]})}var i=o(3),s=function(r,e){return new l(r,e)},d=function(r){return new i(s,r)};function c(r){return t(function(){var e=Array.prototype.slice.call(arguments,0),o={shim:this,method:r,args:e,ts:new Date};window._rollbarShims[this.shimId()].messages.push(o)})}l.prototype.loadFull=function(r,e,o,n,a){var l=!1,i=e.createElement("script"),s=e.getElementsByTagName("script")[0],d=s.parentNode;i.crossOrigin="",i.src=n.rollbarJsUrl,o||(i.async=!0),i.onload=i.onreadystatechange=t(function(){if(!(l||this.readyState&&"loaded"!==this.readyState&&"complete"!==this.readyState)){i.onload=i.onreadystatechange=null;try{d.removeChild(i)}catch(r){}l=!0,function(){var e;if(void 0===r._rollbarDidLoad){e=new Error("rollbar.js did not load");for(var o,n,t,l,i=0;o=r._rollbarShims[i++];)for(o=o.messages||[];n=o.shift();)for(t=n.args||[],i=0;i<t.length;++i)if("function"==typeof(l=t[i])){l(e);break}}"function"==typeof a&&a(e)}()}}),d.insertBefore(i,s)},l.prototype.wrap=function(r,e,o){try{var n;if(n="function"==typeof e?e:function(){return e||{}},"function"!=typeof r)return r;if(r._isWrap)return r;if(!r._rollbar_wrapped&&(r._rollbar_wrapped=function(){o&&"function"==typeof o&&o.apply(this,arguments);try{return r.apply(this,arguments)}catch(o){var e=o;throw e&&("string"==typeof e&&(e=new String(e)),e._rollbarContext=n()||{},e._rollbarContext._wrappedSource=r.toString(),window._rollbarWrappedError=e),e}},r._rollbar_wrapped._isWrap=!0,r.hasOwnProperty))for(var t in r)r.hasOwnProperty(t)&&(r._rollbar_wrapped[t]=r[t]);return r._rollbar_wrapped}catch(e){return r}};for(var p="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleAnonymousErrors,handleUnhandledRejection,captureEvent,captureDomContentLoaded,captureLoad".split(","),u=0;u<p.length;++u)l.prototype[p[u]]=c(p[u]);r.exports={setupShim:function(r,e){if(r){var o=e.globalAlias||"Rollbar";if("object"==typeof r[o])return r[o];r._rollbarShims={},r._rollbarWrappedError=null;var a=new d(e);return t(function(){e.captureUncaught&&(a._rollbarOldOnError=r.onerror,n.captureUncaughtExceptions(r,a,!0),e.wrapGlobalEventHandlers&&n.wrapGlobals(r,a,!0)),e.captureUnhandledRejections&&n.captureUnhandledRejections(r,a,!0);var t=e.autoInstrument;return!1!==e.enabled&&(void 0===t||!0===t||"object"==typeof t&&t.network)&&r.addEventListener&&(r.addEventListener("load",a.captureLoad.bind(a)),r.addEventListener("DOMContentLoaded",a.captureDomContentLoaded.bind(a))),r[o]=a,a})()}},Rollbar:d}},function(r,e){function o(r,e,o){if(e.hasOwnProperty&&e.hasOwnProperty("addEventListener")){for(var n=e.addEventListener;n._rollbarOldAdd&&n.belongsToShim;)n=n._rollbarOldAdd;var t=function(e,o,t){n.call(this,e,r.wrap(o),t)};t._rollbarOldAdd=n,t.belongsToShim=o,e.addEventListener=t;for(var a=e.removeEventListener;a._rollbarOldRemove&&a.belongsToShim;)a=a._rollbarOldRemove;var l=function(r,e,o){a.call(this,r,e&&e._rollbar_wrapped||e,o)};l._rollbarOldRemove=a,l.belongsToShim=o,e.removeEventListener=l}}r.exports={captureUncaughtExceptions:function(r,e,o){if(r){var n;if("function"==typeof e._rollbarOldOnError)n=e._rollbarOldOnError;else if(r.onerror){for(n=r.onerror;n._rollbarOldOnError;)n=n._rollbarOldOnError;e._rollbarOldOnError=n}e.handleAnonymousErrors();var t=function(){var o=Array.prototype.slice.call(arguments,0);!function(r,e,o,n){r._rollbarWrappedError&&(n[4]||(n[4]=r._rollbarWrappedError),n[5]||(n[5]=r._rollbarWrappedError._rollbarContext),r._rollbarWrappedError=null);var t=e.handleUncaughtException.apply(e,n);o&&o.apply(r,n),"anonymous"===t&&(e.anonymousErrorsPending+=1)}(r,e,n,o)};o&&(t._rollbarOldOnError=n),r.onerror=t}},captureUnhandledRejections:function(r,e,o){if(r){"function"==typeof r._rollbarURH&&r._rollbarURH.belongsToShim&&r.removeEventListener("unhandledrejection",r._rollbarURH);var n=function(r){var o,n,t;try{o=r.reason}catch(r){o=void 0}try{n=r.promise}catch(r){n="[unhandledrejection] error getting `promise` from event"}try{t=r.detail,!o&&t&&(o=t.reason,n=t.promise)}catch(r){}o||(o="[unhandledrejection] error getting `reason` from event"),e&&e.handleUnhandledRejection&&e.handleUnhandledRejection(o,n)};n.belongsToShim=o,r._rollbarURH=n,r.addEventListener("unhandledrejection",n)}},wrapGlobals:function(r,e,n){if(r){var t,a,l="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(t=0;t<l.length;++t)r[a=l[t]]&&r[a].prototype&&o(e,r[a].prototype,n)}}}},function(r,e){function o(r,e){this.impl=r(e,this),this.options=e,function(r){for(var e=function(r){return function(){var e=Array.prototype.slice.call(arguments,0);if(this.impl[r])return this.impl[r].apply(this.impl,e)}},o="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleAnonymousErrors,handleUnhandledRejection,_createItem,wrap,loadFull,shimId,captureEvent,captureDomContentLoaded,captureLoad".split(","),n=0;n<o.length;n++)r[o[n]]=e(o[n])}(o.prototype)}o.prototype._swapAndProcessMessages=function(r,e){var o,n,t;for(this.impl=r(this.options);o=e.shift();)n=o.method,t=o.args,this[n]&&"function"==typeof this[n]&&("captureDomContentLoaded"===n||"captureLoad"===n?this[n].apply(this,[t[0],o.ts]):this[n].apply(this,t));return this},r.exports=o},function(r,e){r.exports=function(r){return function(e){if(!e&&!window._rollbarInitialized){for(var o,n,t=(r=r||{}).globalAlias||"Rollbar",a=window.rollbar,l=function(r){return new a(r)},i=0;o=window._rollbarShims[i++];)n||(n=o.handler),o.handler._swapAndProcessMessages(l,o.messages);window[t]=n,window._rollbarInitialized=!0}}}}]);
+
+  </script>
+
+
+
+
+
+</head>
+<body class="white logged-out exercises buffer_overflows unknown_device unknown_browser unknown_browser0 windows non-ie">
+
+  <div class="content">
+
+
+      
+  <div class="exercise-title">
+    <a href="#">
+      <div class="inline">
+        <img class="logo" src="../../d1o5lmfp4gliop.cloudfront.net/images/exercises/buffer-overflows/icon.gif" />
+      </div>
+
+      <div class="inline title">
+        <div>
+          Buffer Overflows
+        </div>
+        <div class="tracking"></div>
+      </div>
+
+      <a class="back-to-lessons" href="../lessons.html">
+        <i class="fa fa-times-circle back-icon"></i>
+        <div class="back-label">Exit</div>
+</a>    </a>
+  </div>
+
+
+    <noscript>
+  <div class="row">
+    <p class="alert alert-danger no-script">
+      This site needs JavaScript to work!
+    </p>
+  </div>
+</noscript>
+
+    <div class="main exercise">
+
+      <div class="card-holder">
+        <div id="intro" class="intro">
+          <a id="start-exercise" href="#start">
+            <div class="card">
+
+  <div class="img porthole" style="background-color: white; background-position: center; background-repeat: no-repeat; background-image: url('../../d1o5lmfp4gliop.cloudfront.net/images/exercises/buffer-overflows/icon.gif')"></div>
+
+  <div class="strip">
+    Buffer Overflows
+  </div>
+  <div class="blurb">
+
+    <p>An attacker can use buffer overflows to take your site offline or to inject malicious code</p>
+
+    <p>
+      <strong>
+        Let's learn how they work.
+      </strong>
+    </p>
+
+  </div>
+</div>
+
+          </a>
+        </div>
+      </div>
+
+      <div class="lesson-holder">
+        <div class="lesson"
+             data-name="Buffer Overflows"
+             data-id="buffer_overflows"
+             data-captions="on" >
+
+          
+        <div id="buffer-overflows" class="container">
+  <div class="row top" style="height: 200px">
+
+    <div class="col-sm-3"></div>
+
+    <div class="col-sm-6">
+
+      <a class="unselectable" href="#what-is-a-buffer"><div id="start" class=" instruction" introductory="true"><p>A <span class="vulnerability">buffer overflow</span> occurs when a program tries to write too much data in a fixed length block of memory (a buffer). Buffer overflows can be used by attackers to crash a web-server or execute malicious code.</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="#exercise-buffer-overflow"><div id="what-is-a-buffer" class=" instruction" show="#buffer-illustration" trigger="bufferExample"><p>A <strong>buffer</strong> is a block of contiguous memory used to hold data. High-level languages will check the length of a buffer before writing to it, but low-level languages like C, C++ and Assembly require the application itself to do this type of checking.</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="#overflow"><div id="exercise-buffer-overflow" class=" instruction" show="#overflow-code,#overflow-prompt" trigger="focusPrompt"><p>Take a look at this very simple C program that does not check the length of the input. Try entering a username that is longer than 8 characters and watch what happens.</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="#no-ops"><div id="overflow" class=" instruction" show="#buffer-illustration" trigger="bufferOverflow"><p>Extra data that overflows a buffer will will be written into the nearby memory space, and will often crash the application. Under some circumstances, an attacker will be able to sneak their own code into the overflowed data, and have this “shellcode” executed within the vulnerable application.</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="#managed-memory"><div id="no-ops" class=" instruction" show="#buffer-illustration" trigger="noopSlide"><p>One common approach is to fill as much of the program’s memory space as possible with no-op (“no operation”) instructions then place the injected code at the end. If the progam’s execution context lands on any of the no-op codes, it will skip to the next no-op, then the next, and so on, until it finally executes the injected code.</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="#stack-vulnerabilities"><div id="managed-memory" class=" instruction" show="#memory-managed-languages"><p>Most languages used to write web-code - like Python, Ruby, Node, Java and .NET - used “managed memory”, and are immune to buffer overflow attacks.</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="#finish"><div id="stack-vulnerabilities" class=" instruction" show=".overflow-vulnerability"><p>However web-servers, language runtimes, and operating systems are frequently written in low-level languages, and can exhibit the vulnerability. The fact that 80% of the web is running on one of the four web-servers means anytime a vulnerability is discovered, it can be widely exploited!</p>
+<div class="next"></div></div></a>
+
+      <a class="unselectable" href="../prevention/buffer-overflows.html"><div id="finish" class=" instruction"><div class="icon"><img src="../../d1o5lmfp4gliop.cloudfront.net/assets/skull-56af21599bf07cebbffbecceec1537a9471628fb1d3374433c1d9b8b1ab703bf.png" /></div><div class="message"><p>Let’s learn how to protect against buffer overflows!</p>
+</div><div class="next"></div></div></a>
+
+    </div>
+
+    <div class="col-sm-3"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 illustrations">
+
+      <div id="buffer-illustration" class="hide-by-default initially-hidden">
+        <table class="memory-space">
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+          <tr>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+            <td/> <td/> <td/> <td/> <td/> <td/> <td/> <td/>
+          </tr>
+        </table>
+      </div>
+
+
+      <div id="memory-managed-languages" class="hide-by-default initially-hidden">
+        <div id="memory-managed-code" class="code-window">
+          <div class="heading">Safe.java</div>
+          <div class="contents">
+            <pre id="vulnerable-code" class="snippet">
+<code class="java hljs">
+try {
+   String[] array = { "a", "b", "c" };
+   array[25] = "z";
+}
+catch (ArrayIndexOutOfBoundsException e) {
+   // Attempts to overflow the buffer will raise an error in Java.
+   e.printStackTrace();
+}
+</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div id="overflow-code" class="code-window hide-by-default initially-hidden">
+        <div class="heading">oops.c</div>
+        <div class="contents">
+            <pre id="vulnerable-code" class="snippet">
+<code class="c hljs">void askForUsername()
+{
+  // Buffer can only hold 8 characters!
+  char buffer[8];
+
+  printf("Enter supply your username:\n");
+  scanf("%s", buffer);
+  printf("You entered: %s\n", buffer);
+}
+
+int main()
+{
+  while(1) askForUsername();
+
+  return 0;
+}
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div id="overflow-prompt" class="code-window hide-by-default initially-hidden">
+        <div class="heading">Running: "oops.c"</div>
+        <div class="contents command-line">
+          <div>Enter supply your username: <input class="prompt" maxlength="20" type="text"/></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <img class="overflow-vulnerability initially-hidden hide-by-default vuln-1" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/buffer-overflows/apache-vulnerability-27aa19aaa50b257fb88ca97b1ae25643e64f9c908df5b37a6af556a0ba519480.png" />
+    </div>
+    <div class="col-sm-4">
+      <img class="overflow-vulnerability initially-hidden hide-by-default vuln-2" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/buffer-overflows/nginx-vulnerability-eb57828f44695641014fceb0324d6ea131d2189a31be250c30790757e272a2b1.png" />
+    </div>
+    <div class="col-sm-4">
+      <img class="overflow-vulnerability initially-hidden hide-by-default vuln-3" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/buffer-overflows/iis-vulnerability-6bec5b713d2ab46f80a5e37a7d484fb86e0d3b3c71b84274a47197d36d92d5ed.png" />
+    </div>
+  </div>
+</div>
+
+<script>
+  var overflowText = 'too_much_data_to_fit_in_the_buffer'
+  var painting     = 'current'
+
+  function clearBuffer() {
+    $(".memory-space td").text('')
+    $(".memory-space td").removeClass()
+
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 16; col++) {
+        var selector = ".memory-space tr:nth-child(" + (row + 1 ) + ") td:nth-child(" + (col + 1) + ")";
+        $(selector).text(row.toString(16) + col.toString(16));
+      }
+    }
+  }
+
+  function writeToBuffer(value, row, col) {
+    painting = Math.random() * 16;
+
+    clearBuffer();
+
+    shadeBuffer(value, row, col, row, col, 0, painting);
+  }
+
+  function shadeBuffer(value, row, col, initRow, initCol, i, paintFlag) {
+    if (i === 8 || painting !== paintFlag) {
+      writeBufferContents(value, initRow, initCol, 'overflow', paintFlag);
+      return
+    }
+
+    var selector = ".memory-space tr:nth-child(" + row + ") td:nth-child(" + col + ")";
+
+    $(selector).text('');
+    $(selector).addClass('buffer');
+
+    col++;
+
+    if (col > 16) {
+      col = 1;
+      row ++;
+    }
+
+    setTimeout(function() {
+      shadeBuffer(value, row, col, initRow, initCol, i+1, paintFlag);
+    }, 100)
+  }
+
+  function writeBufferContents(value, row, col, className, paintFlag) {
+    if (value.length === 0 || painting !== paintFlag) {
+      return
+    }
+
+    var selector = ".memory-space tr:nth-child(" + row + ") td:nth-child(" + col + ")";
+
+    if (value[0] === '☠') {
+      className = 'shellcode';
+    }
+
+    $(selector).text(value[0]);
+
+    if (!$(selector).hasClass('buffer')) {
+      if (value[0] === '☠') {
+        $(selector).addClass(className + ' skull');
+      }
+      else {
+        $(selector).addClass(className);
+      }
+    }
+
+    value = value.substr(1)
+
+    col++;
+
+    if (col > 16) {
+      col = 1;
+      row ++;
+    }
+
+    setTimeout(function() {
+      writeBufferContents(value, row, col, className, paintFlag)
+    }, 100)
+  }
+
+  function bufferExample() {
+    writeToBuffer('buffer  ', 3, 8)
+  }
+
+  function bufferOverflow() {
+    writeToBuffer(overflowText, 3, 8)
+  }
+
+  function noopSlide() {
+    writeToBuffer('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>☠☠☠☠☠☠☠', 3, 8)
+  }
+
+  function focusPrompt() {
+    $(".prompt").focus();
+
+    $("body").on("keydown", ".prompt", function (e) {
+      if (e.keyCode === 13) {
+        var text = $('.prompt').val();
+
+        $('.prompt').replaceWith(text);
+
+        if (text.length <= 8) {
+          $(".command-line").html(
+            $(".command-line").html() + '<div>You entered: ' + text + '</div><div>Enter supply your username: <input maxlength="20" class="prompt" type="text"/></div>'
+          );
+
+          $(".prompt:enabled").focus();
+        }
+        else {
+          overflowText = text;
+          $(".command-line").html($(".command-line").html() + '<div class="seg-fault">Segmentation fault</div>');
+          $("#overflow-prompt").shake();
+        }
+      }
+    });
+
+    $.fn.shake = function() {
+      this.each(function(i) {
+        for (var x = 1; x <= 3; x++) {
+          $(this).animate({
+            marginLeft: -5, marginRight: 5
+          }, 30).animate({
+            marginLeft: 5, marginRight: -5
+          }, 20).animate({
+            marginLeft: -2, marginRight: 2
+          }, 10).animate({
+            marginLeft: 2, marginRight: -2
+          }, 20).animate({
+            marginLeft: 0, marginRight: 0
+          }, 10);
+        }
+      });
+
+      return this;
+    }
+  }
+</script>
+
+
+        </div>
+
+
+          
+
+
+
+
+      </div>
+
+    </div>
+
+
+    <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercise-5652b5b649e3d7688a1c4e39179541168716b52f4d2d6c72ea0210af3eebe078.js"></script>
+
+
+
+
+
+
+  </div>
+
+    <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/cookieinfo-1af9cc137c2c2bc8ea4d469f45d357ec43dc6c23537bd0c96aa9b51ff416ce5e.js" id="cookieinfo"></script>
+
+</body>
+
+<script>
+  $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip({ container: 'body' });
+  });
+</script>
+
+
+<!-- Mirrored from www.iXi.com/exercises/buffer-overflows by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Aug 2022 09:49:14 GMT -->
+</html>

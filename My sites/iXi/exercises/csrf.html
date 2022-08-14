@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from www.iXi.com/exercises/csrf by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Aug 2022 09:48:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+
+  <title>Cross-site Request Forgery</title>
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://d1o5lmfp4gliop.cloudfront.net/assets/favicon-d2fd4b2666fd6a6c2eacee13d0d844a558942079e549b7f971085de9cab55511.ico" />
+
+  <link rel="apple-touch-icon"                 href="../touch-icon-iphone.png">
+  <link rel="apple-touch-icon" sizes="76x76"   href="../touch-icon-ipad.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="../touch-icon-iphone-retina.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="../touch-icon-ipad-retina.png">
+
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" media="all" href="../../d1o5lmfp4gliop.cloudfront.net/assets/application-bd10ee974bbc51bb3d86fa9ae10645db2b3eb4dc3d8cc7ce69082d3b5ef323f2.css" />
+  <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/application-70c4df94450edcfd2aaba387739ebbeae5cc4e79db9eec96837bd15cf2ea700e.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="ljRlxh6zRsL6mggn1PCYg8vSe8vcTlfGoO912Vn0+gQE4yspXGvwhbxeMZGfUsBir2MtcZFWcdf252/r9R+ETw==" />
+
+  
+
+  <meta property="og:url"          content="https://www.iXi.com/exercises/csrf" />
+<meta property="og:type"         content="website" />
+<meta property="og:title"        content="Cross-site Request Forgery" />
+<meta property="og:description"  content="If an attacker can forge HTTP requests to your site, they may be able to trick your users into triggering unintended actions. This is very bad for your users. →" />
+<meta property="og:image"        content="https://www.iXi.comhttps://d1o5lmfp4gliop.cloudfront.net/images/exercises/csrf/screenshot.png" />
+<meta property="og:site_name"    content="iXi"/>
+
+<meta property="fb:app_id"       content="495778420623064">
+
+<meta name="description"         content="If an attacker can forge HTTP requests to your site, they may be able to trick your users into triggering unintended actions. This is very bad for your users. →" />
+
+<meta name="twitter:title"       content="Cross-site Request Forgery">
+<meta name="twitter:description" content="If an attacker can forge HTTP requests to your site, they may be able to trick your users into triggering unintended actions. This is very bad for your users. → %>">
+
+<meta name="application-name"                content="iXi"/>
+<meta name="msapplication-TileColor"         content="#000000"/>
+<meta name="msapplication-square70x70logo"   content="windows-tiny.png"/>
+<meta name="msapplication-square150x150logo" content="windows-square.png"/>
+<meta name="msapplication-wide310x150logo"   content="windows-wide.png"/>
+<meta name="msapplication-square310x310logo" content="windows-large.png"/>
+
+
+  
+  <script>
+    let _rollbarConfig = {
+      accessToken: "7292cc33ae3843d4bc12aa01e4d82436",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      payload: {
+        environment: "production",
+        user: "unknown"
+      },
+      hostSafeList: ['iXi.com', 'www.iXi.com', 'app.iXi.com'],
+      ignoredMessages: ["jQuery is missing", "Can't find variable ga"]
+    };
+
+    !function(r){var e={};function o(n){if(e[n])return e[n].exports;var t=e[n]={i:n,l:!1,exports:{}};return r[n].call(t.exports,t,t.exports,o),t.l=!0,t.exports}o.m=r,o.c=e,o.d=function(r,e,n){o.o(r,e)||Object.defineProperty(r,e,{enumerable:!0,get:n})},o.r=function(r){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(r,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(r,"__esModule",{value:!0})},o.t=function(r,e){if(1&e&&(r=o(r)),8&e)return r;if(4&e&&"object"==typeof r&&r&&r.__esModule)return r;var n=Object.create(null);if(o.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:r}),2&e&&"string"!=typeof r)for(var t in r)o.d(n,t,function(e){return r[e]}.bind(null,t));return n},o.n=function(r){var e=r&&r.__esModule?function(){return r.default}:function(){return r};return o.d(e,"a",e),e},o.o=function(r,e){return Object.prototype.hasOwnProperty.call(r,e)},o.p="",o(o.s=0)}([function(r,e,o){var n=o(1),t=o(4);_rollbarConfig=_rollbarConfig||{},_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||"https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/2.13.0/rollbar.min.js",_rollbarConfig.async=void 0===_rollbarConfig.async||_rollbarConfig.async;var a=n.setupShim(window,_rollbarConfig),l=t(_rollbarConfig);window.rollbar=n.Rollbar,a.loadFull(window,document,!_rollbarConfig.async,_rollbarConfig,l)},function(r,e,o){var n=o(2);function t(r){return function(){try{return r.apply(this,arguments)}catch(r){try{console.error("[Rollbar]: Internal error",r)}catch(r){}}}}var a=0;function l(r,e){this.options=r,this._rollbarOldOnError=null;var o=a++;this.shimId=function(){return o},"undefined"!=typeof window&&window._rollbarShims&&(window._rollbarShims[o]={handler:e,messages:[]})}var i=o(3),s=function(r,e){return new l(r,e)},d=function(r){return new i(s,r)};function c(r){return t(function(){var e=Array.prototype.slice.call(arguments,0),o={shim:this,method:r,args:e,ts:new Date};window._rollbarShims[this.shimId()].messages.push(o)})}l.prototype.loadFull=function(r,e,o,n,a){var l=!1,i=e.createElement("script"),s=e.getElementsByTagName("script")[0],d=s.parentNode;i.crossOrigin="",i.src=n.rollbarJsUrl,o||(i.async=!0),i.onload=i.onreadystatechange=t(function(){if(!(l||this.readyState&&"loaded"!==this.readyState&&"complete"!==this.readyState)){i.onload=i.onreadystatechange=null;try{d.removeChild(i)}catch(r){}l=!0,function(){var e;if(void 0===r._rollbarDidLoad){e=new Error("rollbar.js did not load");for(var o,n,t,l,i=0;o=r._rollbarShims[i++];)for(o=o.messages||[];n=o.shift();)for(t=n.args||[],i=0;i<t.length;++i)if("function"==typeof(l=t[i])){l(e);break}}"function"==typeof a&&a(e)}()}}),d.insertBefore(i,s)},l.prototype.wrap=function(r,e,o){try{var n;if(n="function"==typeof e?e:function(){return e||{}},"function"!=typeof r)return r;if(r._isWrap)return r;if(!r._rollbar_wrapped&&(r._rollbar_wrapped=function(){o&&"function"==typeof o&&o.apply(this,arguments);try{return r.apply(this,arguments)}catch(o){var e=o;throw e&&("string"==typeof e&&(e=new String(e)),e._rollbarContext=n()||{},e._rollbarContext._wrappedSource=r.toString(),window._rollbarWrappedError=e),e}},r._rollbar_wrapped._isWrap=!0,r.hasOwnProperty))for(var t in r)r.hasOwnProperty(t)&&(r._rollbar_wrapped[t]=r[t]);return r._rollbar_wrapped}catch(e){return r}};for(var p="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleAnonymousErrors,handleUnhandledRejection,captureEvent,captureDomContentLoaded,captureLoad".split(","),u=0;u<p.length;++u)l.prototype[p[u]]=c(p[u]);r.exports={setupShim:function(r,e){if(r){var o=e.globalAlias||"Rollbar";if("object"==typeof r[o])return r[o];r._rollbarShims={},r._rollbarWrappedError=null;var a=new d(e);return t(function(){e.captureUncaught&&(a._rollbarOldOnError=r.onerror,n.captureUncaughtExceptions(r,a,!0),e.wrapGlobalEventHandlers&&n.wrapGlobals(r,a,!0)),e.captureUnhandledRejections&&n.captureUnhandledRejections(r,a,!0);var t=e.autoInstrument;return!1!==e.enabled&&(void 0===t||!0===t||"object"==typeof t&&t.network)&&r.addEventListener&&(r.addEventListener("load",a.captureLoad.bind(a)),r.addEventListener("DOMContentLoaded",a.captureDomContentLoaded.bind(a))),r[o]=a,a})()}},Rollbar:d}},function(r,e){function o(r,e,o){if(e.hasOwnProperty&&e.hasOwnProperty("addEventListener")){for(var n=e.addEventListener;n._rollbarOldAdd&&n.belongsToShim;)n=n._rollbarOldAdd;var t=function(e,o,t){n.call(this,e,r.wrap(o),t)};t._rollbarOldAdd=n,t.belongsToShim=o,e.addEventListener=t;for(var a=e.removeEventListener;a._rollbarOldRemove&&a.belongsToShim;)a=a._rollbarOldRemove;var l=function(r,e,o){a.call(this,r,e&&e._rollbar_wrapped||e,o)};l._rollbarOldRemove=a,l.belongsToShim=o,e.removeEventListener=l}}r.exports={captureUncaughtExceptions:function(r,e,o){if(r){var n;if("function"==typeof e._rollbarOldOnError)n=e._rollbarOldOnError;else if(r.onerror){for(n=r.onerror;n._rollbarOldOnError;)n=n._rollbarOldOnError;e._rollbarOldOnError=n}e.handleAnonymousErrors();var t=function(){var o=Array.prototype.slice.call(arguments,0);!function(r,e,o,n){r._rollbarWrappedError&&(n[4]||(n[4]=r._rollbarWrappedError),n[5]||(n[5]=r._rollbarWrappedError._rollbarContext),r._rollbarWrappedError=null);var t=e.handleUncaughtException.apply(e,n);o&&o.apply(r,n),"anonymous"===t&&(e.anonymousErrorsPending+=1)}(r,e,n,o)};o&&(t._rollbarOldOnError=n),r.onerror=t}},captureUnhandledRejections:function(r,e,o){if(r){"function"==typeof r._rollbarURH&&r._rollbarURH.belongsToShim&&r.removeEventListener("unhandledrejection",r._rollbarURH);var n=function(r){var o,n,t;try{o=r.reason}catch(r){o=void 0}try{n=r.promise}catch(r){n="[unhandledrejection] error getting `promise` from event"}try{t=r.detail,!o&&t&&(o=t.reason,n=t.promise)}catch(r){}o||(o="[unhandledrejection] error getting `reason` from event"),e&&e.handleUnhandledRejection&&e.handleUnhandledRejection(o,n)};n.belongsToShim=o,r._rollbarURH=n,r.addEventListener("unhandledrejection",n)}},wrapGlobals:function(r,e,n){if(r){var t,a,l="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(t=0;t<l.length;++t)r[a=l[t]]&&r[a].prototype&&o(e,r[a].prototype,n)}}}},function(r,e){function o(r,e){this.impl=r(e,this),this.options=e,function(r){for(var e=function(r){return function(){var e=Array.prototype.slice.call(arguments,0);if(this.impl[r])return this.impl[r].apply(this.impl,e)}},o="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleAnonymousErrors,handleUnhandledRejection,_createItem,wrap,loadFull,shimId,captureEvent,captureDomContentLoaded,captureLoad".split(","),n=0;n<o.length;n++)r[o[n]]=e(o[n])}(o.prototype)}o.prototype._swapAndProcessMessages=function(r,e){var o,n,t;for(this.impl=r(this.options);o=e.shift();)n=o.method,t=o.args,this[n]&&"function"==typeof this[n]&&("captureDomContentLoaded"===n||"captureLoad"===n?this[n].apply(this,[t[0],o.ts]):this[n].apply(this,t));return this},r.exports=o},function(r,e){r.exports=function(r){return function(e){if(!e&&!window._rollbarInitialized){for(var o,n,t=(r=r||{}).globalAlias||"Rollbar",a=window.rollbar,l=function(r){return new a(r)},i=0;o=window._rollbarShims[i++];)n||(n=o.handler),o.handler._swapAndProcessMessages(l,o.messages);window[t]=n,window._rollbarInitialized=!0}}}}]);
+
+  </script>
+
+
+
+
+
+</head>
+<body class="white logged-out exercises csrf unknown_device unknown_browser unknown_browser0 windows non-ie">
+
+  <div class="content">
+
+
+      
+  <div class="exercise-title">
+    <a href="#">
+      <div class="inline">
+        <img class="logo" src="../../d1o5lmfp4gliop.cloudfront.net/images/exercises/csrf/icon.gif" />
+      </div>
+
+      <div class="inline title">
+        <div>
+          Cross-site Request Forgery
+        </div>
+        <div class="tracking"></div>
+      </div>
+
+      <a class="back-to-lessons" href="../lessons.html">
+        <i class="fa fa-times-circle back-icon"></i>
+        <div class="back-label">Exit</div>
+</a>    </a>
+  </div>
+
+
+    <noscript>
+  <div class="row">
+    <p class="alert alert-danger no-script">
+      This site needs JavaScript to work!
+    </p>
+  </div>
+</noscript>
+
+    <div class="main exercise">
+
+      <div class="card-holder">
+        <div id="intro" class="intro">
+          <a id="start-exercise" href="#start">
+            <div class="card">
+
+  <div class="img porthole" style="background-color: white; background-position: center; background-repeat: no-repeat; background-image: url('../../d1o5lmfp4gliop.cloudfront.net/images/exercises/csrf/icon.gif')"></div>
+
+  <div class="strip">
+    Cross-site Request Forgery
+  </div>
+  <div class="blurb">
+
+    <p>If an attacker can forge HTTP requests to your site, they may be able to trick your users into triggering unintended actions.</p>
+
+    <p>
+      <strong>
+        This is very bad for your users.
+      </strong>
+    </p>
+
+  </div>
+</div>
+
+          </a>
+        </div>
+      </div>
+
+      <div class="lesson-holder">
+        <div class="lesson"
+             data-name="Cross-site Request Forgery"
+             data-id="csrf"
+             data-captions="on" >
+
+          
+        <div id="csrf" class="container">
+  <div class="row top">
+
+    <div class="col-md-3"> </div>
+
+    <div class="col-md-6">
+
+      <a class="unselectable" href="#cross-domain-requests"><div id="start" class=" instruction" title="Start" introductory="true" next="cross-domain-requests">
+
+        When creating a website, we tend to code the client-side and the server-side
+        together. We build the pages and forms a user will interact with on the
+        client-side, then build the server-side URLs that respond when the user
+        performs an action.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#forged-requests"><div id="cross-domain-requests" class=" instruction" title="Cross-Domain Requests" transcript="However, requests can be triggered to the server-side code from anywhere - not just the client-side code we write. This is one of the most powerful aspects of how internet is designed: it allows linking between sites. But it also the cause of a common security flaw, cross-site request forgery - often abbreivated as CSRF." introductory="true" next="forged-requests">
+
+        However, requests can be triggered to the server-side code from anywhere -
+        not just the client-side code we write. This is one of the most powerful
+        aspects of how internet is designed: it allows linking between sites.
+        But it also the cause of a common security flaw,
+        <span class="vulnerability">cross-site request forgery</span> (CSRF).
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#tweeper"><div id="forged-requests" class=" instruction" title="Forged Requests" introductory="true" next="tweeper">
+
+        <strong>A CSRF attack occurs when a user is tricked into interacting with
+        a page or script on a third-party site that generates a malicious request
+        to <em>your</em> site.</strong> All your server will see is an HTTP request
+        from an authenticated user. However, an attacker takes control over the
+        form of the data sent in the request to cause mischief.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#introducing-mal"><div id="tweeper" class=" instruction" title="tweeper" next="introducing-mal">
+
+        Imagine you run the micro-blogging service that allows your users
+        to tweep their opinions at each other in 280-character-sized chunks.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="../prevention/csrf.html"><div id="finish" class=" instruction" title="How do we prevent this?">
+
+        <div class="icon">
+          <img src="../../d1o5lmfp4gliop.cloudfront.net/assets/skull-56af21599bf07cebbffbecceec1537a9471628fb1d3374433c1d9b8b1ab703bf.png" />
+        </div>
+
+        <div class="message">
+          <strong>Phew.</strong> Now we know how <span class="vulnerability">Cross-Site Request Forgery</span>
+          works, let's learn how to protect against it.
+        </div>
+
+<div class="next"></div></div></a>
+    </div>
+
+    <div class="col-md-3"> </div>
+
+  </div>
+
+  <div class="row middle">
+
+    <div class="col-md-3">
+
+      <a class="unselectable" href="#crafting-the-url"><div id="introducing-mal" class=" instruction" show="#mal-preparing" title="Mal, Again" next="crafting-the-url">
+
+        <strong>Mal</strong> is a hacker who has noticed that posts on your service
+        are created using GET requests. This means that all the information is
+        carried in the URL of the HTTP request.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#introducing-vic"><div id="crafting-the-url" class=" instruction" show="#mal-hacking,#evil-thinks" title="Crafting the URL" next="introducing-vic">
+
+        Mal modifies the post-creation URL to include a malicious payload. Now he
+        has to find some way to get a victim to visit the URL in their browser.
+
+<div class="next"></div></div></a>    </div>
+
+    <div class="col-md-3">
+
+      <img class="mal character hide-by-default" id="mal-preparing" src="../../d1o5lmfp4gliop.cloudfront.net/assets/flynn/mal-preparing-06c19221aa11811471e37995f4a4ae85b601d7ce2a85005cbd74bbdabf2112a3.png" />
+      <img class="mal character hide-by-default" id="mal-hacking" src="../../d1o5lmfp4gliop.cloudfront.net/assets/flynn/mal-hacking-flipped-0f5f24930b514fb0d273d3a224dae82203336a1fa6392ecca5aaa99d005e234f.png" />
+
+      <span id="evil-thinks" character="" class="thought-bubble hide-by-default" animation="bubble">
+  <div class="bubble thinks">
+    
+        <code>www.tweeper.com/post?message=<strong>This+horse+know+karate!+www%2Cbit.ly%2F60138Wawd</strong></code>
+
+  </div>
+
+  <div class="bubble first">  </div>
+  <div class="bubble second"> </div>
+  <div class="bubble third">  </div>
+</span>
+    </div>
+
+  </div>
+
+  <div class="row bottom">
+
+    <div class="col-md-4">
+
+      <div id="bait"
+     class="browser email hide-by-default"
+     animation="slide">
+  <div class="nav">
+    <span class="buttons">
+      <span class="button red">    </span>
+      <span class="button orange"> </span>
+      <span class="button green">  </span>
+    </span>
+    <div class="url">
+      <div class="address"></div>
+      <div class="load-icon"></div>
+    </div>
+  </div>
+  <div class="frame">
+
+    
+
+        <div class="email-header">
+          <div class="subject"><strong>Subject:</strong> Has science gone too far? </div>
+          <div class="details"><strong>To:</strong> Vic</div>
+        </div>
+
+        <div class="body">
+          Researchers have taught this horse how to do karate!<br>
+          <img class="shrink-fit" style="margin-top: 10px; width: 100%" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/horse-14e2f0968295be0151ad0f6342c0b7f20efadc943a41cd9a9d611aa8e06d7a05.jpg" />
+        </div>
+
+
+
+  </div>
+</div>
+      <div id="login"
+     class="browser hide-by-default"
+     >
+  <div class="nav">
+    <span class="buttons">
+      <span class="button red">    </span>
+      <span class="button orange"> </span>
+      <span class="button green">  </span>
+    </span>
+    <div class="url">
+      <div class="address">www.tweeper.com</div>
+      <div class="load-icon"></div>
+    </div>
+  </div>
+  <div class="frame">
+
+    
+        <img src="../../d1o5lmfp4gliop.cloudfront.net/assets/login-7d06e3b59b8d07bcc26b0fd1369cbf74105b65a4095346377c6fc269dd810e34.png" />
+
+
+  </div>
+</div>
+      <div id="worm"
+     class="browser hide-by-default"
+     >
+  <div class="nav">
+    <span class="buttons">
+      <span class="button red">    </span>
+      <span class="button orange"> </span>
+      <span class="button green">  </span>
+    </span>
+    <div class="url">
+      <div class="address">www.tweeper.com</div>
+      <div class="load-icon"></div>
+    </div>
+  </div>
+  <div class="frame">
+
+    
+        <div class="tweeper"></div>
+        <img id="posted" class="hide-by-default" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/tweep-fbb17dd63b7d9ef939bc7cc4e2af4155fe0c469976b6fccb79a782a4258804da.png" />
+
+
+  </div>
+</div>
+      <script>
+        function explodeyZoom() {
+          $("#posted").fadeIn();
+        }
+      </script>
+
+      <div id="spreading" class="hide-by-default">
+
+        <img id="post" class="hide-by-default" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/tweep-1-322b70b9cbeb5011c33fbf516ee739df3a6da1736b3e66db019f0aeb46d5463a.png" />
+        <img id="post" class="hide-by-default" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/tweep-2-8c833f05bd5caa7924a6f33108668c2e457ca40f0dbef1c4a9a2ad34ed2d4c18.png" />
+        <img id="post" class="hide-by-default" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/tweep-3-2e907f17b548cdd33ad13cb8b09083e3bc646079817b87c23a071f5276dc06d9.png" />
+        <img id="post" class="hide-by-default" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/tweep-4-dbe2200d334f74c04dddb9117f47f5466080837c93fcda31d5d201909babdb63.png" />
+        <img id="post" class="hide-by-default" src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercises/csrf/tweep-5-5ba509a544f046bbc83bdc8f65ba9aa1a99c3c0b08c4f5e5c5c43e322ae20666.png" />
+
+      </div>
+    </div>
+
+    <div class="col-md-4 right-panel">
+
+      <img class="vic character hide-by-default" id="vic-neutral" src="../../d1o5lmfp4gliop.cloudfront.net/assets/flynn/vic-neutral-flipped-258f0fa0ca8f889b52b75fe93e25cea71c5a60de988152b98d54bd6cc3205351.png" />
+      <img class="vic character hide-by-default" id="vic-excited" src="../../d1o5lmfp4gliop.cloudfront.net/assets/flynn/vic-excited-flipped-bd8f3a408907c769f4612ed3a6b7e4baa846ed7d6ad5eb6be1d3224a5ba78767.png" />
+      <img class="vic character hide-by-default" id="vic-confused" src="../../d1o5lmfp4gliop.cloudfront.net/assets/flynn/vic-confused-flipped-f93edb831c1a3b852375f3329ef0ac865c9bf023037c9e2632bdca561cb4491d.png" />
+
+      <span id="yeah-horse" character="" class="thought-bubble hide-by-default" animation="bubble">
+  <div class="bubble thinks">
+    
+        That seems like a very dangerous thing to do.
+
+  </div>
+
+  <div class="bubble first">  </div>
+  <div class="bubble second"> </div>
+  <div class="bubble third">  </div>
+</span>
+      <span id="what-if" character="" class="thought-bubble hide-by-default" animation="bubble">
+  <div class="bubble thinks">
+    
+        What if it starts teaching the other horses karate?
+
+  </div>
+
+  <div class="bubble first">  </div>
+  <div class="bubble second"> </div>
+  <div class="bubble third">  </div>
+</span>
+      <span id="wait-what" character="" class="thought-bubble hide-by-default" animation="bubble">
+  <div class="bubble thinks">
+    
+        Wait - did I post that? I don't think I did.
+
+  </div>
+
+  <div class="bubble first">  </div>
+  <div class="bubble second"> </div>
+  <div class="bubble third">  </div>
+</span>
+    </div>
+
+    <div class="col-md-4">
+
+      <a class="unselectable" href="#setting-the-trap"><div id="introducing-vic" class=" instruction" show="#vic-neutral" title="Introducing Vic" next="setting-the-trap">
+
+        <strong>Vic</strong> is one of your users. Mal has been  able to guess his email address.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#clicky-clicky"><div id="setting-the-trap" class=" instruction" show="#bait,#vic-neutral,#yeah-horse" title="Setting the Trap" fx="notification" next="clicky-clicky">
+
+        Mal sends Vic an email with a very tempting link, pointing to the crafted URL.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#malicious-request"><div id="clicky-clicky" class=" instruction" show="#bait,#vic-excited,#what-if" title="Don&#39;t Do It!" next="malicious-request">
+
+        Vic clicks on the link.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#the-worm"><div id="malicious-request" class=" instruction" show="#worm,#html,#vic-confused,#wait-what,#posted" title="Script Injected" trigger="explodeyZoom" fx="hmm" next="the-worm">
+
+        Your server interprets the request as Vic writing a post, and creates a new
+        item on his timeline. This is not the action that Vic intended, but he
+        may not quite have noticed what just occurred.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#the-worm-spreads"><div id="the-worm" class=" instruction" show="#worm,#posted" title="And So The Worm Spreads" next="the-worm-spreads">
+
+        The post is designed to be enticing enough that other users of your
+        site will click on it. When they do, they will be tricked in the same
+        way Vic was.
+
+<div class="next"></div></div></a>
+      <a class="unselectable" href="#finish"><div id="the-worm-spreads" class=" instruction" show="#spreading" title="And So The Worm Spreads" trigger="doTheWorm" next="finish">
+
+        You now have a <strong>worm</strong> on your site, as each user who
+        clicks the link will open up a new set of potential victims. Bad news!
+
+<div class="next"></div></div></a>
+      <script>
+        function doTheWorm() {
+          for (var i = 1; i <= 5; i++) {
+            $("#post:nth-of-type(" + i + ")").delay((i - 1) * 1000).fadeIn()
+          }
+        }
+      </script>
+
+    </div>
+
+  </div>
+</div>
+
+
+        </div>
+
+
+          
+
+
+
+
+      </div>
+
+    </div>
+
+
+    <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/exercise-5652b5b649e3d7688a1c4e39179541168716b52f4d2d6c72ea0210af3eebe078.js"></script>
+
+
+
+
+
+
+  </div>
+
+    <script src="../../d1o5lmfp4gliop.cloudfront.net/assets/cookieinfo-1af9cc137c2c2bc8ea4d469f45d357ec43dc6c23537bd0c96aa9b51ff416ce5e.js" id="cookieinfo"></script>
+
+</body>
+
+<script>
+  $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip({ container: 'body' });
+  });
+</script>
+
+
+<!-- Mirrored from www.iXi.com/exercises/csrf by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Aug 2022 09:48:36 GMT -->
+</html>
